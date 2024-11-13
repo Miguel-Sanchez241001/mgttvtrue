@@ -1,0 +1,182 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    template="/secure/plantilla/plantilla.xhtml">
+
+    <ui:define name="metadata" />
+    <ui:define name="content">
+
+        <h2>REPORTE DE LOG DE AUDITORIA</h2>
+
+        <h:form id="formReporteLog">
+            <center>
+                <p:panel style="margin:30px 80px 30px 80px;padding:20px;">
+                    <h:panelGrid style="width:90%;" columns="1">
+
+                        <p:panelGrid style="margin:20px auto 20px auto;" id="pgBusqueda"
+                            columns="2" layout="grid">
+                            <p:outputLabel value="Seleccione tipo de búsqueda :" />
+
+                            <p:selectOneMenu id="tipoBusqueda"
+                                style="width:162px;vertical-align:middle;"
+                                value="#{logController.logModel.tiposBusquedaSeleccione}">
+                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+
+                                <p:ajax update="formReporteLog:pgBusqueda"
+                                    listener="#{logController.logModel.actualizarBusquedaPor()}" />
+
+                                <f:selectItems
+                                    value="#{logController.logModel.listaTiposBusqueda}" var="tipo"
+                                    itemLabel="#{tipo}" itemValue="#{tipo}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="numDocumento" value="Número"
+                                rendered="#{logController.logModel.busquedaPorUsername}" />
+                            <p:inputText id="numDocumento"
+                                value="#{logController.logModel.username}" maxlength="19"
+                                required="#{logController.logModel.busquedaPorUsername}"
+                                requiredMessage="El número de usuario es requerido"
+                                rendered="#{logController.logModel.busquedaPorUsername}" />
+                             
+
+                            <p:outputLabel for="fechaInicio" value="Fecha Inicio"
+                                rendered="#{logController.logModel.busquedaPorFecha}" />
+                            <p:calendar id="fechaInicio"
+                                value="#{logController.logModel.fechaInicio}"
+                                pattern="dd/MM/yyyy"
+                                required="#{logController.logModel.busquedaPorFecha}"
+                                requiredMessage="La fecha de inicio es requerida"
+                                rendered="#{logController.logModel.busquedaPorFecha}" />
+                            
+
+                            <p:outputLabel for="fechaFin" value="Fecha Fin"
+                                rendered="#{logController.logModel.busquedaPorFecha}" />
+                            <p:calendar id="fechaFin"
+                                value="#{logController.logModel.fechaFin}"
+                                pattern="dd/MM/yyyy"
+                                required="#{logController.logModel.busquedaPorFecha}"
+                                requiredMessage="La fecha de fin es requerida"
+                                rendered="#{logController.logModel.busquedaPorFecha}" />
+ 
+
+                            <p:outputLabel for="agenciaName" value="Agencia"
+                                rendered="#{logController.logModel.busquedaPorAgencia}" />
+                            <p:inputText id="agenciaName"
+                                value="#{logController.logModel.agenciaName}" maxlength="50"
+                                required="#{logController.logModel.busquedaPorAgencia}"
+                                requiredMessage="El nombre de la agencia es requerido"
+                                rendered="#{logController.logModel.busquedaPorAgencia}" />
+                             
+
+                            <p:outputLabel for="accionSeleccionada" value="Acción"
+                                rendered="#{logController.logModel.busquedaPorAccion}" />
+                            <p:selectOneMenu id="accionSeleccionada"
+                                value="#{logController.logModel.accionSeleccionada}"
+                                required="#{logController.logModel.busquedaPorAccion}"
+                                requiredMessage="Debe seleccionar una acción"
+                                rendered="#{logController.logModel.busquedaPorAccion}">
+                                <f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+                                <f:selectItems value="#{logController.logModel.listaAccion}"
+                                    var="accion" itemLabel="#{accion.descripcion}"
+                                    itemValue="#{accion}" />
+                            </p:selectOneMenu>
+                         
+                            
+                        </p:panelGrid>
+                        
+                                 <p:commandButton id="buscarLog" value="Buscar"
+                                	styleClass="btnGrande" process="@form"
+                               	style="width:10%;margin:5px 620px;"
+                                actionListener="#{logController.buscarLog()}"
+                                onstart="PF('statusDialog').show()"
+                                update="msgs"
+                                oncomplete="PF('statusDialog').hide()" />
+ 
+                        <p:messages id="msgs" showDetail="true" showSummary="false"
+                            closable="true" />
+
+                        <div class="dashed"></div>
+
+                        <h:panelGrid id="pgResultadoFin" style="width:100%;text-align:center;"
+                            columns="1">
+
+
+                            <p:panel id="listaLogs" style="display:#{logController.logModel.busquedaRealizada ? 'block' : 'none'};">
+
+                                <p:panelGrid id="pgExporter" columns="2"
+                                    style="float:right;margin-right:2px;">
+                                    <h:commandLink>
+                                        <img
+                                            src="#{request.contextPath}/resources/img/plantillaBN/iconos/xls.gif" />
+                                        <p:dataExporter type="xls" target="dtLogs"
+                                            fileName="ReporteLogs" />
+                                    </h:commandLink>
+                                </p:panelGrid>
+
+                                <h:panelGrid id="pgResultado"  style="width:100%;">
+                                    <p:dataTable id="dtLogs" var="log"
+                                        value="#{logController.logModel.bloqueosRealizados}"
+                                        rows="10"
+             paginator="true" paginatorPosition="bottom"
+             rowsPerPageTemplate="5,10,15"
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                        style="width:100%;" rowIndexVar="index">
+                                        <p:column>
+										<f:facet name="header">
+											<h:outputText value="Nro." />
+										</f:facet>
+										<h:outputText value="#{index+1}" />
+									</p:column>	
+                                        <p:column  >
+                                        <f:facet name="header">
+											<h:outputText value="Fecha"  />
+											
+										</f:facet>
+                                            <h:outputText value="#{log.fecha}" >
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+											</h:outputText>
+                                        </p:column>
+                                        <p:column  >
+                                           <f:facet name="header">
+											<h:outputText value="Hora" />
+										</f:facet>
+                                            <h:outputText value="#{log.hora}" />
+                                        </p:column>
+                                        <p:column  >
+                                           <f:facet name="header">
+											<h:outputText value="Usuario" />
+										</f:facet>
+                                            <h:outputText value="#{log.usuario}" />
+                                        </p:column>
+                                        <p:column  >
+                                         <f:facet name="header">
+											<h:outputText value="Acción" />
+										</f:facet>
+                                            <h:outputText value="#{log.accion}" />
+                                        </p:column>
+                                        <p:column >
+                                         <f:facet name="header">
+											<h:outputText value="Datos" />
+										</f:facet>
+                                            <h:outputText value="#{log.datos}" />
+                                        </p:column>
+                                        <p:column >
+                                         <f:facet name="header">
+											<h:outputText value="Area" />
+										</f:facet>
+                                            <h:outputText value="#{log.nameAgencia}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:panelGrid>
+
+                    </h:panelGrid>
+                </p:panel>
+            </center>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

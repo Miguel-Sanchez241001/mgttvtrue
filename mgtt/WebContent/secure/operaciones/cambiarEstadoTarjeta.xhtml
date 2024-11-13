@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	template="/secure/plantilla/plantilla.xhtml">
+
+	<ui:define name="metadata">
+	</ui:define>
+	<ui:define name="content">
+		<h2>CAMBIAR ESTADO TARJETA</h2>
+
+		<h:form id="formCambiarEstadoTarjeta">
+			<center>
+				<p:panel style="margin:30px 80px 30px 80px;padding:20px;">
+
+					<h:panelGrid style="width:90%;" columns="1">
+						<p:panelGrid id="pgBusqueda" columns="4"
+							style="margin:20px auto 20px auto;" layout="grid">
+							<h:outputText value="Consultar por" style="margin-left:20px;" />
+							<p:selectOneMenu id="somTipoBusquedaPor"
+								style="width:162px; margin-left:20px;"
+								value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tipoBusquedaPor}"
+								required="true" requiredMessage="Seleccione tipo de búsqueda">
+								<p:ajax update="formCambiarEstadoTarjeta:somTipoBusqueda"
+									listener="#{cambiarEstadoTarjetaController.buscarTipoBusqueda()}" />
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+								<f:selectItems
+									value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.listaTipoBusquedaPor}"
+									var="item" itemLabel="#{item}" itemValue="#{item}" />
+							</p:selectOneMenu>
+
+							<h:outputText value="Seleccionar" />
+							<p:selectOneMenu id="somTipoBusqueda"
+								widgetVar="selectTipoBusqueda" style="width:162px;"
+								value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tipoBusqueda}"
+								required="true" requiredMessage="Seleccione tipo de documento">
+								<p:ajax event="change"
+									update="formCambiarEstadoTarjeta:numDocumento" />
+								<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+								<f:selectItems
+									value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.listaTipoBusqueda}"
+									var="item" itemLabel="#{item.descripcion}"
+									itemValue="#{item.id}" />
+							</p:selectOneMenu>
+
+							<h:outputText value="Número" style="margin-left:20px;" />
+							<p:inputText id="numDocumento" required="true"
+								style="margin-left:20px;"
+								onkeypress="javascript:return jsValidarKey(event,/[0-9]/);"
+								value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.numDocumento}"
+								maxlength="19"
+								requiredMessage="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.obtenerBusquedaRequiredMessage()}"
+								validatorMessage="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.obtenerBusquedaValidatorMessage()}">
+								<f:validateLength
+									minimum="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.obtenerBusquedaLength()}" />
+							</p:inputText>
+
+						</p:panelGrid>
+						<p:commandButton id="buscarE" value="Buscar"
+							styleClass="btnGrande" style="width:10%;margin:0px 620px;"
+							process="@this somTipoBusqueda,numDocumento"
+							actionListener="#{cambiarEstadoTarjetaController.buscarTarjeta}"
+							onstart="PF('statusDialog').show()" update="msgs"
+							oncomplete="PF('statusDialog').hide()" />
+						<p:messages id="msgs" showDetail="true" showSummary="false"
+							closable="true" />
+
+						<h:panelGrid id="pgResultado"
+							style="width:90%; text-align:center;" columns="1"
+							rendered="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.busquedaRealizada}">
+							<p:panelGrid style="margin:auto; text-align:left;" columns="2">
+								<p:panel style="margin:10px 20px; padding:20px;">
+									<h3 style="text-align: center">Datos del tarjetahabiente</h3>
+									<p:panelGrid columns="2">
+										<h:outputText value="Tipo de documento" />
+										<h:outputText value="Número de documento" />
+										<p:inputText readonly="true"
+											value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.descripcionTipoDocumento(cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.datosTarjetaCliente.cliente.tipoDocumento)}" />
+										<p:inputText readonly="true"
+											value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.datosTarjetaCliente.cliente.nroDocumento}" />
+										<h:outputText value="Nombres" />
+										<h:outputText value="Apellidos" />
+										<p:inputText readonly="true"
+											value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.datosTarjetaCliente.cliente.nombres}" />
+										<p:inputText readonly="true"
+											value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.datosTarjetaCliente.cliente.apPaterno}" />
+
+										<h:outputText value="Fecha Nacimiento" />
+										<h:outputText value=" " />
+										<p:inputText readonly="true"
+											value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.datosTarjetaCliente.cliente.fechaNacimiento}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:inputText>
+									</p:panelGrid>
+								</p:panel>
+
+								<p:panel style="margin:10px 20px; padding:20px;">
+									<h3 style="text-align: center">Datos de la tarjeta</h3>
+									<p:panelGrid columns="2">
+										<h:outputText value="Número de la tarjeta" />
+										<h:outputText value="Estado" />
+										
+										<p:inputText readonly="true"
+											value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tarjetaOpcionSeleccionada.numTar}" />
+								<p:inputText readonly="true"
+											value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tarjetaOpcionSeleccionada.estado}" />	
+										
+										<h:outputText value="Tipo de tarjeta" />
+										<h:outputText value="Tipo de gasto" />
+										<p:inputText readonly="true"
+											value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tarjetaOpcionSeleccionada.tipoTar}" />
+										<p:inputText readonly="true"
+											value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tarjetaOpcionSeleccionada.tipoGasto}" />
+										
+												
+										<h:outputText value="Estado autorización" />
+										<p:inputText readonly="true" value="- -" />
+		 
+										
+									</p:panelGrid>
+								</p:panel>
+							</p:panelGrid>
+
+							<p:panelGrid style="margin:20px auto 20px auto;" columns="1"
+								rendered="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.busquedaRealizada}">
+								<h:outputText value="Motivo : " />
+								<p:selectOneRadio id="console"
+									value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tipoBloqueoSeleccionado}">
+									<p:ajax event="valueChange" update="formCambiarEstadoTarjeta" />
+									<f:selectItem itemLabel="Tarjeta" itemValue="T" />
+									<f:selectItem itemLabel="Cuenta" itemValue="C" />
+								</p:selectOneRadio>
+
+
+								<p:selectOneMenu id="somMotivo"
+									rendered="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tipoBloqueoSeleccionado eq 'T'}"
+									value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.motivoSeleccionado}"
+									style="width:162px;vertical-align:middle;" required="true"
+									requiredMessage="Seleccione el motivo">
+									<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+									<f:selectItems var="item" itemLabel="#{item.bloqueoDes}"
+										value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.motivosBloqueoTarjetas}"
+										itemValue="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.obtenerMotivo(item.bloqueo,item.bloqueoDes)}" />
+								</p:selectOneMenu>
+
+								<p:selectOneMenu id="somCuentaEstado"
+									rendered="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tipoBloqueoSeleccionado eq 'C'}"
+									value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.motivoSeleccionado}"
+									style="width:162px;vertical-align:middle;" required="true"
+									requiredMessage="Seleccione un estado cuenta">
+									<f:selectItem itemLabel="Seleccione" itemValue="#{null}" />
+									<f:selectItems var="item" itemLabel="#{item.bloqueoDes}"
+										value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.motivosBloqueoCuenta}"
+										itemValue="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.obtenerEstadoCuenta(item.bloqueo,item.bloqueoDes)}" />
+								</p:selectOneMenu>
+							</p:panelGrid>
+							<p:panelGrid columns="1"
+								style="margin-top:30px; width:90%; margin:auto;">
+								<p:commandButton id="cambiarEstadoTarjeta"
+									styleClass="btnGrande" process="pgResultado"
+									value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.valorBoton()}"
+									onstart="cambiarEstadoWv.show()" />
+							</p:panelGrid>
+						</h:panelGrid>
+					</h:panelGrid>
+				</p:panel>
+			</center>
+		</h:form>
+
+		<p:dialog id="dgSeleccionarTarjeta" widgetVar="wvSeleccionarTajeta"
+			modal="true" closable="true" appendTo="@(body)" resizable="false"
+			closeOnEscape="false" draggable="false" position="center"
+			showEffect="clip" header="Seleccionar Representante">
+			<h:form id="formSeleccionarTarjeta">
+
+				<p:panelGrid id="panel-seleccionarTarjeta" columns="1"
+					style="widht:100%">
+					<h:outputText value="Lista de tarjetas" />
+					<p:dataTable id="tablaTarjetas"
+						value="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.listaTarjetasOpcion}"
+						selection="#{cambiarEstadoTarjetaController.cambiarEstadoTarjetaModel.tarjetaOpcionSeleccionada}"
+						selectionMode="single" var="tarjeta" rowKey="#{tarjeta.idTar}"
+						emptyMessage="No hay tarjetas"
+						style="width:100%;table-layout: fixed;" rowIndexVar="index">
+
+						<p:ajax event="rowSelect"
+							listener="#{cambiarEstadoTarjetaController.seleccionarTarjeta}"
+							oncomplete="PF('wvSeleccionarTajeta').hide()" />
+
+
+						<p:column headerText="Número de tarjeta"
+							style="widht:30%;text-align:left; vertical-align: middle;">
+							<h:outputText value="#{tarjeta.numTar}" />
+						</p:column>
+
+						<p:column headerText="Nombre del Cliente"
+							style="widht:50%; text-align:left;vertical-align: middle;">
+							<h:outputText value="#{tarjeta.nomCliente}" />
+						</p:column>
+						<p:column headerText="Tipo de tarjeta"
+							style="widht:50%; text-align:left;vertical-align: middle;">
+							<h:outputText value="#{tarjeta.tipoTar}" />
+						</p:column>
+						<p:column headerText="Tipo de gasto"
+							style="widht:50%; text-align:left;vertical-align: middle;">
+							<h:outputText value="#{tarjeta.tipoGasto}" />
+						</p:column>
+						<p:column headerText="Estado de la tarjeta"
+							style="widht:50%; text-align:left;vertical-align: middle;">
+							<h:outputText value="#{tarjeta.estado}" />
+						</p:column>
+					</p:dataTable>
+				</p:panelGrid>
+
+			</h:form>
+		</p:dialog>
+		<p:dialog id="cambiarEstado" widgetVar="cambiarEstadoWv" modal="true"
+			draggable="false" resizable="false" header="Confirmar">
+			<h:form id="formCambiar" style="width: 400px; font-size: 11px;">
+				<div style="margin: 15px 0 5px;">
+					<h:outputText
+						value="¿Está seguro de cambiar de estado a la tarjeta empresarial?" />
+				</div>
+				<div style="display: flex; justify-content: center;">
+					<p:commandButton style="margin:5px;" id="Aceptar" value="Si"
+						actionListener="#{cambiarEstadoTarjetaController.cambiarEstadoTarjeta()}"
+						onstart="PF('statusDialog').show()"
+						oncomplete="PF('cambiarEstadoWv').hide()"
+						onsuccess="PF('statusDialog').hide()"
+						update=":formCambiarEstadoTarjeta" styleClass="smallBtn" />
+
+					<p:commandButton style="margin:5px;" process="@this" id="cancelar"
+						value="No" oncomplete="cambiarEstadoWv.hide()"
+						styleClass="smallBtn" update=":formCambiarEstadoTarjeta" />
+				</div>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

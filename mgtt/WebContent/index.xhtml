@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Modulo de Gestión de Tarjetas de Tesoro</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="Content-Language" content="es" />
+
+    <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/img/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/resetearcss.css" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/bn-principal.css" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/tipografias.css" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/select.css" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/home.css" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/teclado.css" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/mejoras.css" />
+
+    <script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.ui.js"></script>
+    <script type="text/javascript" src="#{request.contextPath}/resources/js/select.js"></script>
+    <script type="text/javascript" src="#{request.contextPath}/resources/js/bn-funciones.js"></script>
+</h:head>
+<h:body>
+
+    <div class="cabecera sombra-inferior">
+        <div class="cabecera-izq">
+            <span class="sp1"></span>
+            <span class="sp2"></span>
+        </div>
+        <div class="cabecera-der">
+            <h1></h1>
+            <img src="#{request.contextPath}/resources/img/logo_bn.png" alt="Logo Banco de la Nación"/>
+        </div>
+    </div>
+
+    <div class="login-form">
+    <h:form>
+            <!-- Panel para mostrar el estado de conexión de cada data source -->
+            <p:panel header="Estado de Conexiones" style="text-align:center; font-size: 1.5em; margin-bottom:20px;">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputText value="Estado de conexión a SATE (Oracle):" style="font-weight:bold;" />
+                    <h:outputText value="#{homeController.estadoDataSourceSate}"
+                                  style="font-weight:bold; color:#{homeController.estadoDataSourceSate.startsWith('Conectado') ? 'green' : 'red'}" />
+
+                    <h:outputText value="Estado de conexión a TABLAS (SQL Server):" style="font-weight:bold;" />
+                    <h:outputText value="#{homeController.estadoDataSourceTablas}"
+                                  style="font-weight:bold; color:#{homeController.estadoDataSourceTablas.startsWith('Conectado') ? 'green' : 'red'}" />
+                </h:panelGrid>
+            </p:panel>
+
+            <!-- Mostrar mensaje en pantalla -->
+            <p:outputLabel value="#{homeController.mensaje}" style="font-size: 1.2em; font-weight: bold;" />
+            <br/>
+            <!-- Botón para ejecutar la acción y mostrar el mensaje -->
+            <p:commandButton value="Mostrar Mensaje" action="#{homeController.mostrarMensaje}" update="@form"/>
+        </h:form>
+    </div>
+
+    <div id="pie-pagina">
+        <div id="titulo-pie-pagina">Banco de la Nación | Ministerio de Economía y Finanzas</div>
+        <div id="oficinas">
+            <p>Oficina Principal: Av. Javier Prado Este 2499. San Borja. Central Telefónica: 519-2000.</p>
+            <p>Atención en Oficinas Administrativas: Lunes a Viernes de 8:30 a 17:30 horas. Refrigerio de: 13:00 a 14:00 horas</p>
+            <p>Atención en Oficina de Trámite Documentario: Lunes a Viernes de 9:00 a 17:00 horas (Horario corrido).</p>
+        </div>
+    </div>
+
+    <p:ajaxStatus onprocess="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+    <p:dialog id="statusDia" widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+        <center>
+            <p:outputLabel value="Cargando.." style="font-size:12px" />
+            <br />
+        </center>
+        <p:graphicImage name="/img/ajaxloadingbar.gif" />
+    </p:dialog>
+
+    <script type="text/javascript">
+        $("html, body").animate({
+            scrollTop : $("body").height() * .1
+        }, 750);
+
+        window.onload = function() {
+            document.getElementById('generarCaptchaLink').onclick();
+        }
+
+        function cargarCaptcha(byteArray) {
+            document.getElementById("captchaImg").src = "data:image/jpeg;base64," + byteArray;
+        };
+
+        function generateUserName() {
+            $("#username").val($("#ruc").val() + '-' + PF('tipoDocumentoWv').getSelectedValue() + '-' + $('#numeroDocumento').val());
+        };
+    </script>
+</h:body>
+</html>

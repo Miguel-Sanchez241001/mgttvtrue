@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.2//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.com.bn.mgtt.persistence.mapper.internal.LogMapper">
+
+  <resultMap id="mapLogAuditoria" type="LogAuditoria">
+        <result property="fecha" column="B20_FECHA" />
+        <result property="hora" column="B20_HORA" />
+        <result property="usuario" column="B20_USUARIO" />
+        <result property="accion" column="B20_ACCION" />
+        <result property="datos" column="B20_DATOS" />
+        <result property="codAgencia" column="B20_COD_AGENCIA" />
+        <result property="nameAgencia" column="B20_NAME_AGENCIA" />
+    </resultMap>
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:form id="formmenu">
+
+		<div class="menuPanel sombra-inferior">
+
+			<div class="subMenu">
+				<p:commandButton value="Inicio" styleClass="menuBtn"
+					actionListener="#{seguridadController.redireccionar}">
+					<f:attribute name="pagina"
+						value="/secure/principal.jsf?faces-redirect=true" />
+				</p:commandButton>
+			</div>
+
+			<div class="subMenu">
+				<p:commandButton value="Operaciones" styleClass="menuBtn"
+					rendered="#{seguridadController.renderizar('ACCESO_OPERACIONES')}">
+				</p:commandButton>
+				<div class="subMenuContent sombra-inferior">
+					<p:commandButton value="Cambiar estado Tarjeta" styleClass="subMenuBtn"
+						rendered="#{seguridadController.renderizar('ACCESO_OPERACIONES_BLOQUEO_TARJETA')}"
+						actionListener="#{seguridadController.redireccionar}">
+						<f:attribute name="pagina"
+							value="/secure/operaciones/cambiarEstadoTarjeta.jsf?faces-redirect=true" />
+					</p:commandButton>
+				</div>
+			</div>
+
+			<div class="subMenu">
+				<p:commandButton value="Consultas" styleClass="menuBtn"
+					rendered="#{seguridadController.renderizar('ACCESO_REPORTE')}">
+				</p:commandButton>
+				<div class="subMenuContent sombra-inferior">
+					<p:commandButton value="Rendición de cuentas por tarjeta"
+						styleClass="subMenuBtn"
+						rendered="#{seguridadController.renderizar('ACCESO_REPORTE_CONSULTA')}"
+						actionListener="#{seguridadController.redireccionar}">
+						<f:attribute name="pagina"
+							value="/secure/reporte/consultaReporteBloqueo.jsf?faces-redirect=true" />
+					</p:commandButton>
+
+				</div>
+			</div>
+
+			<div class="subMenu">
+				<p:commandButton value="Auditoria" styleClass="menuBtn"
+					rendered="#{seguridadController.renderizar('ACCESO_LOG')}">
+				</p:commandButton>
+				<div class="subMenuContent sombra-inferior">
+					<p:commandButton value="Log"
+						styleClass="subMenuBtn"
+						rendered="#{seguridadController.renderizar('ACCESO_LOG_CONSULTA')}"
+						actionListener="#{seguridadController.redireccionar}">
+						<f:attribute name="pagina"
+							value="/secure/log/consultaLog.jsf?faces-redirect=true" />
+					</p:commandButton>
+				</div>
+			</div>
+
+		</div>
+
+	</h:form>
+</ui:composition>

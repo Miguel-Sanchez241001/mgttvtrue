@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+	<display-name>mgtt</display-name>
+	
+	
+<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>pe.com.bn.mgtt.transversal.configuration.init.AppInitialize</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	
+	
+		<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/secure/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	
+<welcome-file-list>
+		<welcome-file>index.jsf</welcome-file>
+	</welcome-file-list>
+		<!-- JSF mapping -->
+		<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+
+	<context-param>
+		<param-name>javax.faces.FACELETS_DEVELOPMENT</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Development</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+		<param-value>server</param-value>
+	</context-param>
+	<service-ref>
+		<service-ref-name>service/ParametroInterfazKeyService</service-ref-name>
+		<service-interface>pe.com.bn.mgtt.infraestructura.service.external.domain.ParametroInterfazKeyService</service-interface>
+		<wsdl-file>WEB-INF/wsdl/ParametroInterfazKey.wsdl</wsdl-file>
+		<service-qname xmlns:pfx="http://service.ws.comp.bn.com.pe">pfx:ParametroInterfazKeyService</service-qname>
+		<port-component-ref>
+			<service-endpoint-interface>pe.com.bn.mgtt.infraestructura.service.external.domain.ParametroInterfazKey</service-endpoint-interface>
+			<enable-mtom>false</enable-mtom>
+		</port-component-ref>
+	</service-ref>
+<error-page>
+    <error-code>403</error-code>
+    <location>/acceso_denegado.jsf</location>
+</error-page>
+<error-page>
+    <error-code>404</error-code>
+    <location>/acceso_denegado.jsf</location>
+</error-page>
+
+</web-app>

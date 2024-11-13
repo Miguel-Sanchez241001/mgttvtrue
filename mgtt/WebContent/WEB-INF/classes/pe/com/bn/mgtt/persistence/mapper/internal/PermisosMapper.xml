@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.2//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.com.bn.mgtt.persistence.mapper.internal.PermisosMapper">
+
+ 
+	
+	<resultMap id="mapPermiso" type="Permiso">
+		<result property="id" column="B10_ID_PER" />
+		<result property="idRol" column="B10_ID_ROL" />
+		<result property="codFuncionalidad" column="B10_COD_FUNCIONALIDAD" />
+		<result property="descripcion" column="B10_DESCRIPCION" />
+		<result property="estado" column="B10_ESTADO" />
+	</resultMap>
+
+
+
+	<resultMap id="mapBloqueos" type="MotivosBloqueo">
+		<result property="bloqueo" column="codBloq" />
+		<result property="bloqueoTipo" column="tipoBloq" />
+		<result property="bloqueoDes" column="descripcion" />
+	</resultMap>
+</mapper>
